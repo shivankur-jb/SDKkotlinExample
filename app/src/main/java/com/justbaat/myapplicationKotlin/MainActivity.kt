@@ -1,0 +1,79 @@
+package com.justbaat.myapplicationKotlin
+
+import android.os.Bundle
+import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
+import com.google.android.gms.ads.initialization.InitializationStatus
+import com.google.android.material.snackbar.Snackbar
+import com.justbaat.ads.sdk.AdSdkManager.initialize
+import com.justbaat.ads.sdk.AdSdkManager.loadAppOpenAd
+import com.justbaat.ads.sdk.AdSdkManager.registerSdkReadyCallback
+import com.justbaat.ads.sdk.AdSdkManager.showAppOpenAd
+import com.justbaat.myapplicationKotlin.databinding.ActivityMainBinding
+
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var binding: ActivityMainBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        initialize(
+            this,
+            "sample-test-new",
+            { status: InitializationStatus? ->
+                Log.d("MainActivity", "SDK Initialized with: $status")
+            },
+            {
+                Log.d("MainActivity", "SDK is fully ready.")
+                loadAppOpenAd(this)
+            }
+        )
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        setSupportActionBar(binding.toolbar)
+        registerSdkReadyCallback {
+            showAppOpenAd(this@MainActivity)
+        }
+
+        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        appBarConfiguration = AppBarConfiguration(navController.graph)
+        setupActionBarWithNavController(navController, appBarConfiguration)
+
+        binding.fab.setOnClickListener { view ->
+            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                .setAction("Action", null)
+                .setAnchorView(R.id.fab).show()
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        return when (item.itemId) {
+            R.id.action_settings -> true
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        return navController.navigateUp(appBarConfiguration)
+                || super.onSupportNavigateUp()
+    }
+}
