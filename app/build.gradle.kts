@@ -49,7 +49,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     testImplementation(libs.junit)
     implementation("com.google.code.gson:gson:2.10.1")
-    implementation("com.justbaatAds:adsSdk:1.0.7")
+    implementation("com.justbaatAds:adsSdk:1.0.8")
     implementation("com.unity3d.ads-mediation:mediation-sdk:8.9.1")
     implementation("com.google.android.gms:play-services-appset:16.0.0")
     implementation ("com.google.android.gms:play-services-ads-identifier:18.1.0")
